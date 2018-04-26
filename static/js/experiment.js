@@ -141,10 +141,6 @@ async function initializeExperiment() {
 
   return startExperiment({
     timeline,
-    // exclusions: {
-    //   min_width: 800,
-    //   min_height: 600
-    // },
   });
 };
 

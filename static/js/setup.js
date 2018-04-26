@@ -71,7 +71,7 @@ const startExperiment = function(config) {
   const defaults = {
     display_element: $('#jspsych-target'),
     on_finish() {
-      if (DEBUG) {
+      if (LOCAL) {
         return jsPsych.data.displayData();
       } else {
         return submitHit();
