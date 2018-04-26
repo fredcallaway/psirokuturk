@@ -1,6 +1,6 @@
 
 async function initializeExperiment() {
-  LOG_DEBUG('initializeExperiment');
+  console.log('initializeExperiment');
 
   ///////////
   // Setup //
@@ -10,7 +10,7 @@ async function initializeExperiment() {
   const N_TRIAL = 4;
 
   // This ensures that images appear exactly when we tell them to.
-  jsPsych.pluginAPI.preloadImages(['static/images/blue.png', 'static/images/orange.png']);
+  // jsPsych.pluginAPI.preloadImages(['static/images/blue.png', 'static/images/orange.png']);
 
   // To avoid repeating ourselves,  we create a variable for a piece
   // of html that we use multiple times.
@@ -22,9 +22,9 @@ async function initializeExperiment() {
   //////////////////
 
   var welcome_block = {
-    type: "html-keyboard-response",
+    type: "text",
     // We use the handy markdown function (defined in utils.js) to format our text.
-    stimulus: markdown(`
+    text: markdown(`
     # My Sweet Experiment
 
     This is a reworked version of the go/no-go task constructed in a
@@ -52,7 +52,7 @@ async function initializeExperiment() {
   };
 
   var instructions_block = {
-    type: "html-keyboard-response",
+    type: "single-stim",
     // Sometimes we do need the additional control of html.
     // We can mix markdown with html, but you can't use markdown
     // inside an html element, which is why we use <b>html bold tags</b> 
@@ -86,70 +86,40 @@ async function initializeExperiment() {
   // Test trials //
   /////////////////
 
-  var sorting = {
-    type: 'free-sort',
-    stimuli: ["static/images/blue.png", "static/images/orange.png"]
-  }
+  
 
-  var stimuli = [
-    {
-      stimulus: "static/images/blue.png",
-      data: { response: 'go' }
-    },
-    {
-      stimulus: "static/images/orange.png",
-      data: { response: 'no-go' }
-    }
-  ];
+  // var stimuli = [
+  //   {
+  //     stimulus: "static/images/blue.png",
+  //     data: { response: 'go' }
+  //   },
+  //   {
+  //     stimulus: "static/images/orange.png",
+  //     data: { response: 'no-go' }
+  //   }
+  // ];
 
-  var trials = jsPsych.randomization.repeat(stimuli, Math.floor(N_TRIAL / 2));
+  // var trials = jsPsych.randomization.repeat(stimuli, Math.floor(N_TRIAL / 2));
 
-  var fixation = {
-    type: 'html-keyboard-response',
-    stimulus: '<div style="margin-top: 90px; font-size:60px;">+</div>',
-    choices: jsPsych.NO_KEYS,
-    trial_duration() {
-      return Math.floor(Math.random() * 1500) + 750
-    },
-  }
+  // var fixation = {
+  //   type: 'single-stim',
+  //   stimulus: '<div style="margin-top: 90px; font-size:60px;">+</div>',
+  //   choices: jsPsych.NO_KEYS,
+  //   trial_duration() {
+  //     return Math.floor(Math.random() * 1500) + 750
+  //   },
+  // }
 
 
 
-  var test_block = {
-    type: "image-keyboard-response",
-    choices: ['F'],
-    trial_duration: 1500,
-    timeline: _.flatten(trials.map(trial => [fixation, trial]))
-  };
+  // var test_block = {
+  //   type: "single-stim",
+  //   choices: ['F'],
+  //   trial_duration: 1500,
+  //   timeline: _.flatten(trials.map(trial => [fixation, trial]))
+  // };
 
-  console.log(test_block)
-
-
-  function getAverageResponseTime() {
-
-    var trials = jsPsych.data.getTrialsOfType('html-keyboard-response');
-
-    var sum_rt = 0;
-    var valid_trial_count = 0;
-    for (var i = 0; i < trials.length; i++) {
-      if (trials[i].response == 'go' && trials[i].rt > -1) {
-        sum_rt += trials[i].rt;
-        valid_trial_count++;
-      }
-    }
-    return Math.floor(sum_rt / valid_trial_count);
-  }
-
-  var debrief_block = {
-    type: "html-keyboard-response",
-    // We don't want to
-    stimulus() {
-      return `
-        Your average response time was ${getAverageResponseTime()}.
-        Press any key to complete the experiment. Thanks!
-      `
-    }
-  };
+  // console.log(test_block)
 
 
   /////////////////////////
@@ -162,20 +132,19 @@ async function initializeExperiment() {
   // so you don't have to click through them to test
   // the section you're working on.
   var timeline = [
-    // welcome_block,
+    welcome_block,
     // instructions_block,
-    sorting,
-    test_block,
-    debrief_block,
+    // test_block,
+    // debrief_block,
   ];
 
 
   return startExperiment({
     timeline,
-    exclusions: {
-      min_width: 800,
-      min_height: 600
-    },
+    // exclusions: {
+    //   min_width: 800,
+    //   min_height: 600
+    // },
   });
 };
 
